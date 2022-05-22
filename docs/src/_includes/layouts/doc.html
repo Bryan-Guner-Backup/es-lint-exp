@@ -1,0 +1,59 @@
+---
+layout: base.njk
+---
+
+{% include "partials/docs-header.html" %}
+
+<div class="docs-wrapper">
+    <div class="docs-left-sidebar">
+        <div class="desktop-only">
+            {% include 'components/version-switcher.html' %}
+            {% include 'components/search.html' %}
+        </div>
+            {% include 'components/docs-index.html' %}
+    </div>
+
+    {# Add in related rules and further reading sections to content so TOC is accurate #}
+    {% set all_content = content %}
+    {% if related_rules %}
+        {% set related_rules_content %}
+            <h2 id="related-rules">Related Rules</h2>
+            {% related_rules related_rules %}
+        {% endset %}
+
+        {% set all_content = [all_content, related_rules_content] | join %}
+    {% endif %}
+
+    {% if further_reading %}
+        {% set further_reading_content %}
+            <h2 id="further-reading">Further Reading</h2>
+            {% for url in further_reading %}
+                {% link url %}
+            {% endfor %}
+        {% endset %}
+
+        {% set all_content = [all_content, further_reading_content] | join %}
+    {% endif %}
+
+    <div class="docs-content">
+        <main id="main" tabindex="-1" class="docs-main">
+            <h1>{{ title }}</h1>
+            {% include 'components/docs-toc.html' %}
+
+            {{ all_content | safe }}
+
+            <div class="docs-edit-link">
+                <a href="{{ edit_link }}" class="c-btn c-btn--secondary">Edit this page</a>
+            </div>
+        </main>
+
+        <div class="docs-right-sidebar">
+            <aside class="docs-ad">
+                {%- include 'partials/carbon-ad.html' -%}
+            </aside>
+            {% include "partials/docs-footer.html" %}
+        </div>
+    </div>
+</div>
+
+<script src="{{ '/assets/js/tabs.js' | url }}"></script>
